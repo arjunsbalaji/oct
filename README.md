@@ -1,4 +1,3 @@
-# nbdev template
+# OCT
 
-Use this template to more easily create your nbdev project.
-
+Nice and clean version of the oct paper research. Detectron2 is in seg_model.
