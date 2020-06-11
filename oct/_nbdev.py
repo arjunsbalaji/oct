@@ -13,10 +13,10 @@ index = {"saveDictToConfigJSON": "01_startup.ipynb",
          "acc": "01_startup.ipynb",
          "Dice_Loss": "01_startup.ipynb",
          "my_Dice_Loss": "01_startup.ipynb",
-         "MLFlowTracker": "01_startup.ipynb",
          "saveResultsJSON": "01_startup.ipynb",
          "save_all_results": "01_startup.ipynb",
-         "clean_tensor_lists": "01_startup.ipynb"}
+         "clean_tensor_lists": "01_startup.ipynb",
+         "MLFlowTracker": "01_startup.ipynb"}
 
 modules = ["startup.py"]
 
