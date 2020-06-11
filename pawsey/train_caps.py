@@ -8,7 +8,7 @@ import numpy as np
 import mlflow
 from fastai.vision import *
 import mlflow.pytorch as MLPY
-
+import pandas
 
 try:
     epochs = int(sys.argv[2])
@@ -76,6 +76,8 @@ mlflow_CB = partial(MLFlowTracker,
                     params=config.config_dict,
                     nb_path="/workspace/oct_ca_seg/oct/02_runs.ipynb")
 deepCap = CapsNet(config.MODEL).cuda()
+
+
 with mlflow.start_run():
     learner = Learner(data = data,
                       model = deepCap,
