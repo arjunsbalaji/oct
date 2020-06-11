@@ -82,4 +82,6 @@ with mlflow.start_run():
                       metrics = metrics,
                       callback_fns=mlflow_CB)
     learner.fit_one_cycle(config.LEARNER.epochs, slice(config.LEARNER.lr), pct_start=0.9)
-    MLPY.log_model(learner.model, '/workspace/oct_ca_seg/runsaves/fastai_experiments/mlruns/'+exp_name)
+    torch.save(learner.model.state_dict(), '/workspace/oct_ca_seg/runsaves/fastai_experiments/'+exp_name+'.pth')
+    save_all_results(learner, exp_name)
+    #MLPY.log_model(learner.model, '/workspace/oct_ca_seg/runsaves/fastai_experiments/mlruns/'+exp_name)

@@ -69,7 +69,7 @@ data.normalize(stats);
 
 metrics = [sens, spec, dice, my_Dice_Loss, acc]
 
-exp_name = 'FASTAI UNET'
+exp_name = 'FASTAIUNET'
 mlflow_CB = partial(MLFlowTracker,
                     exp_name=exp_name,
                     uri='file:/workspace/oct_ca_seg/runsaves/fastai_experiments/mlruns/',
@@ -79,8 +79,9 @@ with mlflow.start_run():
     learner = unet_learner(data,
                            models.resnet18,
                            pretrained=False,
-                           y_range=[0,1],
                            metrics=metrics,
                            callback_fns=[mlflow_CB])
     learner.fit_one_cycle(config.LEARNER.epochs, slice(config.LEARNER.lr), pct_start=0.8)
-    MLPY.log_model(learner.model, '/workspace/oct_ca_seg/runsaves/fastai_experiments/mlruns/'+exp_name)
+    torch.save(learner.model.state_dict(), '/workspace/oct_ca_seg/runsaves/fastai_experiments/'+exp_name+'.pth')
+    save_all_results(learner, exp_name)
+    #MLPY.log_model(learner.model, '/workspace/oct_ca_seg/runsaves/fastai_experiments/mlruns/'+exp_name)

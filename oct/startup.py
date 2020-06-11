@@ -7,6 +7,7 @@ __all__ = ['saveDictToConfigJSON', 'loadConfigJSONToDict', 'DeepConfig', 'binify
 from fastai.vision import *
 import mlflow
 import model
+import pandas as pd
 
 # Cell
 def saveDictToConfigJSON(dictiontary, name):
@@ -140,3 +141,22 @@ class MLFlowTracker(LearnerCallback):
         "Store the notebook and stop run"
         self.client.log_artifact(run_id=self.run, local_path=self.nb_path)
         self.client.set_terminated(run_id=self.run)
+        
+        
+clean_tensor_lists = lambda l : [x.item() for x in l]
+
+def saveResultsJSON(json, name): #name = exp_name+'item name+ .json'
+    with open('/workspace/oct_ca_seg/runsaves/fastai_experiments/'+ name, 'w') as file:
+        file.write(json)
+        
+        
+def save_all_results(learner, exp_name): #only call this function after training
+    train_losses = pd.DataFrame(clean_tensor_lists(learner.recorder.losses)).to_json()
+    valid_losses = pd.DataFrame(learner.recorder.val_losses).to_json()
+    metrics = np.array([clean_tensor_lists(x) for x in learner.recorder.metrics])
+    metric_names = learner.recorder.metrics_names
+    metrics = pd.DataFrame(metrics, columns=metric_names).to_json()
+    
+    saveResultsJSON(train_losses, exp_name+'trainL.json')
+    saveResultsJSON(valid_losses, exp_name+'validL.json')
+    saveResultsJSON(metrics, exp_name+'metrics.json')
