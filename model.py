@@ -11,6 +11,9 @@ Created on Mon May 13 17:07:35 2019
 
 import numpy as np
 import torch 
+import numbers
+import math
+import torch.nn.functional as F
 
 ###############################################################################
 #need this special squash function for caps net
@@ -160,6 +163,7 @@ class Get_Abstract_Caps_Down(torch.nn.Module):
         
         self.reset_parameters()
         
+        
         #self.predict_vectors = Predict_Vectors_Down(self.W, self.bias)
         self.capsconv2d_down = torch.nn.Conv2d(in_channels = self.capsin_n_maps*self.capsin_n_dims,
                                           out_channels = self.capsout_n_maps*self.capsout_n_dims,
@@ -225,7 +229,7 @@ class Get_Abstract_Caps_Down(torch.nn.Module):
                     input_maps * input_capdims,
                     hold,
                     wold])
-    
+        
         x = self.capsconv2d_down(x)
         #print(x.size(), 'after down conv')
         
@@ -412,7 +416,7 @@ class Get_Abstract_Caps_Up(torch.nn.Module):
         pady = self.padding[0]
         padx = self.padding[1]
         
-
+        self.smooth = GaussianSmoothing(self.capsin_n_maps*self.capsin_n_dims, 3,2)
         
         if self.uptype == 'deconv':
             '''
@@ -486,6 +490,12 @@ class Get_Abstract_Caps_Up(torch.nn.Module):
                     hold,
                     wold])
         '''    
+        #print(x.size())
+
+        x = self.smooth(x)
+        #print(x.size())
+        x = F.pad(x, (1,1,1,1), 'reflect')
+        #print(x.size())
         if self.uptype == 'deconv':
             x = self.capsconv2d_up(x)
             #print(x.size(), 'after up deconv')
@@ -612,7 +622,7 @@ class Reconstruction_Layer(torch.nn.Module):
         
         return x
 ###############################################################################    
-class GaussianSmoothing(nn.Module):
+class GaussianSmoothing(torch.nn.Module):
     """
     Apply gaussian smoothing on a
     1d, 2d or 3d tensor. Filtering is performed seperately for each channel
@@ -914,6 +924,7 @@ class CapsNet(torch.nn.Module):
                                                          across=True)
         capsfinal1_params = self.get_abstract_caps_final1.infer_shapes()
         
+        
         self.get_abstract_caps_final2 = Get_Abstract_Caps_Up(self.opt.batch_size,
                                                          capsin_n_maps = self.opt.f1maps,
                                                          capsin_n_dims = self.opt.f1dims,
@@ -929,10 +940,7 @@ class CapsNet(torch.nn.Module):
                                                          uptype = self.opt.uptype,
                                                          across=False)
 
-        self.reconstruct = Reconstruction_Layer(self.opt.batch_size,
-                                                capsin_n_maps = self.opt.f2maps,
-                                                capsin_n_dims = self.opt.f2dims,
-                                                reconstruct_channels=self.opt.reconchannels)
+        
         
     def forward(self, x):
         x = self.get_prim_caps(x)

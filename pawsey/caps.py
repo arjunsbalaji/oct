@@ -16,7 +16,7 @@ gpu_mem_get_all()
 
 ### Configuration Setup
 
-name = 'DEEPCAP_0001_30_small_learnersaved'
+name = 'DEEPCAP_0001_30_smooth_small_learnersaved'
 
 config_dict = loadConfigJSONToDict('configCAPS_APPresnet18.json')
 config_dict['LEARNER']['lr']= 0.001
