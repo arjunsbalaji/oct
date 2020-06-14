@@ -1,6 +1,6 @@
 #!/bin/bash -l
 #SBATCH --nodes=1
-#SBATCH --time=01:00:00
+#SBATCH --time=04:00:00
 #SBATCH --output=oct_cap%j.out
 #SBATCH --partition=gpuq
 #SBATCH --constraint=p100
@@ -21,4 +21,4 @@ ulimit -s unlimited
 
 export X_MEMTYPE_CACHE=n
 
-srun --export=all -n 1 singularity exec -B $projectDir:/workspace --nv $containerImage python3 pawsey/train_caps.py 10 4 
+srun --export=all -n 1 singularity exec -B $projectDir:/workspace --nv $containerImage python3 pawsey/caps.py #pawsey/train_caps.py 10 4 
