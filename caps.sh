@@ -1,7 +1,7 @@
 #!/bin/bash -l
 #SBATCH --nodes=1
 #SBATCH --time=04:00:00
-#SBATCH --output=oct_cap%j.out
+#SBATCH --output=DEEEPCAP%j.out
 #SBATCH --partition=gpuq
 #SBATCH --constraint=p100
 #SBATCH --account=pawsey0271

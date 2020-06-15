@@ -16,11 +16,12 @@ gpu_mem_get_all()
 
 ### Configuration Setup
 
-name = 'DEEPCAP_0001_30_smooth_small_learnersaved'
+name = 'DEEPCAP_0001_30_final_smooth_small_learnersaved'
 
 config_dict = loadConfigJSONToDict('configCAPS_APPresnet18.json')
 config_dict['LEARNER']['lr']= 0.001
 config_dict['LEARNER']['bs'] = 24
+config_dict['LEARNER']['pct_start'] = 0.3
 config_dict['LEARNER']['epochs'] = 30
 config_dict['LEARNER']['runsave_dir'] = '/workspace/oct_ca_seg/runsaves/'
 config_dict['MODEL']['maps1'] = 4
@@ -81,7 +82,7 @@ learner = Learner(data = data,
                   callback_fns=mlflow_CB)
 
 with mlflow.start_run():
-    learner.fit_one_cycle(config.LEARNER.epochs, slice(config.LEARNER.lr), pct_start=0.9)
+    learner.fit_one_cycle(config.LEARNER.epochs, slice(config.LEARNER.lr), pct_start=config.LEARNER.pct_start)
     MLPY.save_model(learner.model, run_dir+'/model')
     learner.save(Path(run_dir)/'learner')
     save_all_results(learner, run_dir, exp_name)

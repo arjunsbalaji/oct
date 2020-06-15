@@ -1,5 +1,0 @@
-Traceback (most recent call last):
-  File "pawsey/unet.py", line 66, in <module>
-    os.mkdir(run_dir)
-FileExistsError: [Errno 17] File exists: '/workspace/oct_ca_seg/runsaves//UNET'
-srun: error: a086: task 0: Exited with exit code 1

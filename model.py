@@ -384,6 +384,7 @@ class Get_Abstract_Caps_Up(torch.nn.Module):
                  padding, #MUST E A TUPLE CUNNY
                  output_padding, #outpadding must be a TUPLE BIATCH, also i
                  uptype,
+                 smooth,
                  across = True):
         super(Get_Abstract_Caps_Up, self).__init__()
         
@@ -401,6 +402,7 @@ class Get_Abstract_Caps_Up(torch.nn.Module):
         self.padding = padding
         self.output_padding = output_padding
         self.uptype = uptype
+        self.smooth = smooth
         self.across = across
         
         #this is a SPECIAL BIAS! it doesnt go into our conv opertaion
@@ -416,7 +418,8 @@ class Get_Abstract_Caps_Up(torch.nn.Module):
         pady = self.padding[0]
         padx = self.padding[1]
         
-        self.smooth = GaussianSmoothing(self.capsin_n_maps*self.capsin_n_dims, 3,2)
+        
+        if self.smooth: self.smoother = GaussianSmoothing(self.capsin_n_maps*self.capsin_n_dims, 3,2)
         
         if self.uptype == 'deconv':
             '''
@@ -491,11 +494,12 @@ class Get_Abstract_Caps_Up(torch.nn.Module):
                     wold])
         '''    
         #print(x.size())
-
-        x = self.smooth(x)
-        #print(x.size())
-        x = F.pad(x, (1,1,1,1), 'reflect')
-        #print(x.size())
+        if self.smooth:
+            x = self.smoother(x)
+            #print(x.size())
+            x = F.pad(x, (1,1,1,1), 'reflect')
+            #print(x.size())
+            
         if self.uptype == 'deconv':
             x = self.capsconv2d_up(x)
             #print(x.size(), 'after up deconv')
@@ -830,6 +834,7 @@ class CapsNet(torch.nn.Module):
                                                          padding = (2,2),
                                                          output_padding=upa_outputpadding,
                                                          uptype = self.opt.uptype,
+                                                         smooth = False,
                                                          across=True)
         caps3u_params = self.get_abstract_caps3u.infer_shapes()
         
@@ -860,6 +865,7 @@ class CapsNet(torch.nn.Module):
                                                          padding = (2,2),
                                                          output_padding=upa_outputpadding,
                                                          uptype = self.opt.uptype,
+                                                         smooth = False,
                                                          across=True)
         caps2u_params = self.get_abstract_caps2u.infer_shapes()
         
@@ -890,6 +896,7 @@ class CapsNet(torch.nn.Module):
                                                          padding = (2,2),
                                                          output_padding=upa_outputpadding,
                                                          uptype = self.opt.uptype,
+                                                         smooth = False,
                                                          across=True)
         caps1u_params = self.get_abstract_caps1u.infer_shapes()
         
@@ -921,6 +928,7 @@ class CapsNet(torch.nn.Module):
                                                          padding = (1,1),
                                                          output_padding=upa_outputpadding,
                                                          uptype = self.opt.uptype,
+                                                         smooth = False,
                                                          across=True)
         capsfinal1_params = self.get_abstract_caps_final1.infer_shapes()
         
@@ -938,6 +946,7 @@ class CapsNet(torch.nn.Module):
                                                          padding = (1,1),
                                                          output_padding=upa_outputpadding,
                                                          uptype = self.opt.uptype,
+                                                         smooth = True,
                                                          across=False)
 
         
