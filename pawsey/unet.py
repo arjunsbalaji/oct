@@ -15,7 +15,7 @@ from fastai.utils.mem import gpu_mem_get_all
 gpu_mem_get_all()
 
 ### Configuration Setup
-name = 'UNET_0001_30_'
+name = 'UNET_0001_30_final'
 
 config_dict = loadConfigJSONToDict('configCAPS_APPresnet18.json')
 config_dict['LEARNER']['lr']= 0.0001
@@ -77,7 +77,7 @@ learner = unet_learner(data,
                        callback_fns=mlflow_CB)
 
 with mlflow.start_run():
-    learner.fit_one_cycle(config.LEARNER.epochs, slice(config.LEARNER.lr), pct_start=0.9)
+    learner.fit_one_cycle(config.LEARNER.epochs, slice(config.LEARNER.lr), pct_start=0.8)
     MLPY.save_model(learner.model, run_dir+'/model')
     learner.save(Path(run_dir)/'learner')
     save_all_results(learner, run_dir, exp_name)

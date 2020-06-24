@@ -21,4 +21,4 @@ ulimit -s unlimited
 
 export X_MEMTYPE_CACHE=n
 
-srun --export=all -n 1 singularity exec -B $projectDir:/workspace --nv $containerImage python3 pawsey/caps.py #pawsey/train_caps.py 10 4 
+srun --export=all -n 1 singularity exec -B $projectDir:/workspace --nv $containerImage python3 pawsey/caps_1.py #pawsey/train_caps.py 10 4 
