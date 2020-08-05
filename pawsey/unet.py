@@ -18,7 +18,7 @@ gpu_mem_get_all()
 name = 'UNET_0001_30_final'
 
 config_dict = loadConfigJSONToDict('configCAPS_APPresnet18.json')
-config_dict['LEARNER']['lr']= 0.0001
+config_dict['LEARNER']['lr']= 0.00001
 config_dict['LEARNER']['bs'] = 16
 config_dict['LEARNER']['epochs'] = 30
 config_dict['LEARNER']['runsave_dir'] = '/workspace/oct_ca_seg/runsaves/'

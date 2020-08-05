@@ -16,7 +16,7 @@ gpu_mem_get_all()
 
 ### Configuration Setup
 
-name = 'DEEPCAP_09start_10e_001lr_fsmooth_deconv'
+name = 'DEEPCAP_09start_10e_001lr_fsmooth_upsample'
 
 config_dict = loadConfigJSONToDict('configCAPS_APPresnet18.json')
 config_dict['LEARNER']['lr']= 0.001
@@ -24,7 +24,7 @@ config_dict['LEARNER']['bs'] = 24
 config_dict['LEARNER']['pct_start'] = 0.9
 config_dict['LEARNER']['epochs'] = 10
 config_dict['LEARNER']['runsave_dir'] = '/workspace/oct_ca_seg/runsaves/'
-config_dict['MODEL']['up_type'] = 'deconv'
+config_dict['MODEL']['up_type'] = 'upsample'
 config_dict['MODEL']['input_images'] = [0,1,2]
 config_dict['MODEL']['input_channels'] = len(config_dict['MODEL']['input_images'])
 config_dict['MODEL']['maps1'] = 4
@@ -47,6 +47,13 @@ cocodata_path = Path('/workspace/oct_ca_seg/COCOdata/')
 train_path = cocodata_path/'train/images'
 valid_path = cocodata_path/'valid/images'
 test_path = cocodata_path/'test/images'
+
+#for input image selection
+
+def _in_delta(x):
+    return x[config.MODEL.input_images,:,:]
+in_delta = TfmPixel(_in_delta, order=0)
+in_delta.use_on_y = False
 
 ### For complete dataset
 
@@ -91,4 +98,4 @@ with mlflow.start_run():
     MLPY.save_model(learner.model, run_dir+'/model')
     learner.save(Path(run_dir)/'learner')
     save_all_results(learner, run_dir, exp_name)
-    saveConfigRun(config.config_dict, run_dir=Path(run_dir), name = 'configCAPS_small_bs24_epochs30_lr0.001.json')
+    saveConfigRun(config.config_dict, run_dir=Path(run_dir), name = name)

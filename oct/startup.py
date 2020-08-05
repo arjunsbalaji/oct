@@ -42,6 +42,7 @@ class SegCustomLabelList(SegmentationLabelList):
 class SegCustomItemList(SegmentationItemList):
     _label_cls = SegCustomLabelList
 
+    
 # Cell
 def sens(c, l):
     n_targs=l.size()[0]
@@ -65,15 +66,25 @@ def spec(c, l):
     n_targs=l.size()[0]
     c = c.argmax(dim=1).view(n_targs,-1)
     l = l.view(n_targs, -1).float()
-    return torch.sum(c,dim=(1)) / l.size()[-1]'''
+    return torch.sum(c,dim=(1)) / l.size()[-1]
 
 def acc(c, l):
     n_targs=l.size()[0]
     c = c.argmax(dim=1).view(n_targs,-1)
     l = l.argmax(dim=1).view(n_targs,-1)
-    c = torch.sum(torch.eq(c,l).float(),dim=1)
-    return (c/l.size()[-1]).mean()
+    c = torch.sum(torch.eq(c,l).float(),dim=0)
+    return (c/l.size()[-1]).mean()'''  
 
+def acc(c, l):
+    bs=l.size()[0]
+    #print(c.shape,l.shape)
+    c = c.argmax(dim=1).view(bs,-1)
+    #print(c.shape)
+    l = l.argmax(dim=1).view(bs,-1)
+    #print(l.shape)
+    c = torch.sum(torch.eq(c,l).float(),dim=1)
+    #print(c.shape)
+    return (c/l.shape[1]).mean() 
 
 class Dice_Loss(torch.nn.Module):
     """This is a custom Dice Similarity Coefficient loss function that we use

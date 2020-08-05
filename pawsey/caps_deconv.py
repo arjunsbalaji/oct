@@ -48,6 +48,13 @@ train_path = cocodata_path/'train/images'
 valid_path = cocodata_path/'valid/images'
 test_path = cocodata_path/'test/images'
 
+#for input image selection
+
+def _in_delta(x):
+    return x[config.MODEL.input_images,:,:]
+in_delta = TfmPixel(_in_delta, order=0)
+in_delta.use_on_y = False
+
 ### For complete dataset
 
 fn_get_y = lambda image_name: Path(image_name).parent.parent/('labels/'+Path(image_name).name)
@@ -91,4 +98,4 @@ with mlflow.start_run():
     MLPY.save_model(learner.model, run_dir+'/model')
     learner.save(Path(run_dir)/'learner')
     save_all_results(learner, run_dir, exp_name)
-    saveConfigRun(config.config_dict, run_dir=Path(run_dir), name = 'configCAPS_small_bs24_epochs30_lr0.001.json')
+    saveConfigRun(config.config_dict, run_dir=Path(run_dir), name = name)

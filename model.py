@@ -440,6 +440,7 @@ class Get_Abstract_Caps_Up(torch.nn.Module):
             #pady = int((self.y_kernel - 1)/2)
             #padx = int((self.x_kernel - 1)/2)
             #self.padding = (pady, padx)
+            self.padding = (1, 1)
             self.new_hl = 2*self.old_h
             self.new_wl = 2*self.old_w
             self.capsconv2d_up = torch.nn.Conv2d(in_channels = self.capsin_n_maps*self.capsin_n_dims,
@@ -506,6 +507,7 @@ class Get_Abstract_Caps_Up(torch.nn.Module):
         
         elif self.uptype == 'upsample':
             #print(x.size(),'pre up')
+            #print([self.new_hl, self.new_wl])
             x = torch.nn.functional.upsample(x,
                                              size=[self.new_hl, self.new_wl], 
                                              mode='bilinear')
@@ -531,7 +533,9 @@ class Get_Abstract_Caps_Up(torch.nn.Module):
         
         if self.new_wl != wnew: 
             print('Something funny going on with user defined wnew and actual')
-            
+        
+        #print(x.size(), 'out')
+        
         #x = x.permute(0, 1, 3, 4, 5, 2)
         x = x.view([batch,
                     self.capsout_n_maps,
@@ -544,8 +548,10 @@ class Get_Abstract_Caps_Up(torch.nn.Module):
         
         #print(x.size(), 'resizing to normal')
         
+        #print(x.size(), 'pre route')
+        
         x = self.routing(x)
-        #print(x.size(), 'out')
+        #print(x.size(), 'post route')
         return x
 
 ###############################################################################
@@ -818,8 +824,10 @@ class CapsNet(torch.nn.Module):
         
         if self.opt.uptype == 'upsample':
             upa_outputpadding = (0,0)
+            pa=1
         elif self.opt.uptype == 'deconv':
             upa_outputpadding = (1,1)
+            pa=2
             
         self.get_abstract_caps3u = Get_Abstract_Caps_Up(self.opt.batch_size,
                                                          capsin_n_maps = capsbot_params['caps maps'] + caps3_params['caps maps'],
@@ -848,7 +856,7 @@ class CapsNet(torch.nn.Module):
                                                          y_kernel = 3,
                                                          x_kernel = 3,
                                                          stride = 1,
-                                                         padding = 2,
+                                                         padding = pa,
                                                          across=True)
         caps3ua_params = self.get_abstract_caps3ua.infer_shapes()
         
@@ -879,7 +887,7 @@ class CapsNet(torch.nn.Module):
                                                          y_kernel = 3,
                                                          x_kernel = 3,
                                                          stride = 1,
-                                                         padding = 2,
+                                                         padding = pa,
                                                          across=True)
         caps2ua_params = self.get_abstract_caps2ua.infer_shapes()
         
@@ -911,7 +919,7 @@ class CapsNet(torch.nn.Module):
                                                          y_kernel = 3,
                                                          x_kernel = 3,
                                                          stride = 1,
-                                                         padding = 2,
+                                                         padding = pa,
                                                          across=True)
         caps1ua_params = self.get_abstract_caps1ua.infer_shapes()
         
