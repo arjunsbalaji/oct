@@ -1,0 +1,15 @@
+artifact_uri: file:///group/pawsey0271/abalaji/projects/oct_ca_seg/oct/mlruns/0/7ecc7f1f4e3a4587ad177ab207de1a5b/artifacts
+end_time: 1603512433621
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+name: ''
+run_id: 7ecc7f1f4e3a4587ad177ab207de1a5b
+run_uuid: 7ecc7f1f4e3a4587ad177ab207de1a5b
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1603512431305
+status: 4
+tags: []
+user_id: abalaji
