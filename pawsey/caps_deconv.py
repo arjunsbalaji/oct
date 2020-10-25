@@ -16,13 +16,13 @@ gpu_mem_get_all()
 
 ### Configuration Setup
 
-name = 'DEEPCAP_09start_10e_001lr_fsmooth_deconv'
+name = 'DEEPCAP_09start_60e_001lr_fsmooth_deconv'
 
 config_dict = loadConfigJSONToDict('configCAPS_APPresnet18.json')
 config_dict['LEARNER']['lr']= 0.001
 config_dict['LEARNER']['bs'] = 24
 config_dict['LEARNER']['pct_start'] = 0.9
-config_dict['LEARNER']['epochs'] = 10
+config_dict['LEARNER']['epochs'] = 60
 config_dict['LEARNER']['runsave_dir'] = '/workspace/oct_ca_seg/runsaves/'
 config_dict['MODEL']['up_type'] = 'deconv'
 config_dict['MODEL']['input_images'] = [0,1,2]

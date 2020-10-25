@@ -1,6 +1,6 @@
 #!/bin/bash -l
 #SBATCH --nodes=1
-#SBATCH --time=02:00:00
+#SBATCH --time=10:00:00
 #SBATCH --output=DEEEPCAP%j.out
 #SBATCH --partition=gpuq
 #SBATCH --constraint=p100
